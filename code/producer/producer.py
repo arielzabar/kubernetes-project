@@ -5,8 +5,8 @@ from time import sleep
 if __name__ == '__main__':
     examples = sys.argv[0] + " -p 5672 -s rabbitmq -m 'Hello' "
     parser = argparse.ArgumentParser(formatter_class=RawTextHelpFormatter,
-                                 description='Run producer.py',
-                                 epilog=examples)
+                                     description='Run producer.py',
+                                     epilog=examples)
     parser.add_argument('-p', '--port', action='store', dest='port', help='The port to listen on.')
     parser.add_argument('-s', '--server', action='store', dest='server', help='The RabbitMQ server.')
     parser.add_argument('-m', '--message', action='store', dest='message', help='The message to send', required=False, default='Hello')
@@ -37,13 +37,11 @@ if __name__ == '__main__':
 
     # Turn on delivery confirmations
     channel.confirm_delivery()
-
-    for i in range(0, int(args.repeat)):
+    while True:
         if channel.basic_publish('', q_name, args.message):
             LOG.info('Message has been delivered')
         else:
             LOG.warning('Message NOT delivered')
+        sleep(20)
 
-        sleep(2)
-
-    connection.close()
+connection.close()
